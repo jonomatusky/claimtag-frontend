@@ -20,33 +20,34 @@ const AdminNav = ({
   const height = use100vh()
 
   return (
-    <Box minHeight={height} position="relative" width="100%">
+    <>
       {!hideNavBar && <AdminNavBar {...props} />}
-      <main style={{ backgroundColor }}>
-        <Box height={hideNavBar ? '0px' : '64px'} width="100%" mb={4} />
-        <Outlet />
-      </main>
-      {!hideFooter && (
-        <footer>
-          <Box height="64px" width="100%" />
+      <Box minHeight={height - 64} position="relative" width="100%">
+        <main style={{ backgroundColor }}>
+          <Outlet />
+        </main>
+        {!hideFooter && (
+          <footer>
+            <Box height="64px" width="100%" />
 
-          <Box position="absolute" bottom={0} left={0} width="100%" pb={1}>
-            <Grid container justifyContent="center">
-              <Grid item xs={12}>
-                <Typography
-                  fontSize="14px"
-                  // color="#ffffff99"
-                  textAlign="center"
-                >
-                  Created by the <Link href="https://plynth.com">Plynth</Link>{' '}
-                  team
-                </Typography>
+            <Box position="absolute" bottom={0} left={0} width="100%" pb={1}>
+              <Grid container justifyContent="center">
+                <Grid item xs={12}>
+                  <Typography
+                    fontSize="14px"
+                    // color="#ffffff99"
+                    textAlign="center"
+                  >
+                    Created by the <Link href="https://plynth.com">Plynth</Link>{' '}
+                    team
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </footer>
-      )}
-    </Box>
+            </Box>
+          </footer>
+        )}
+      </Box>
+    </>
   )
 }
 

@@ -21,19 +21,19 @@ const CreateDialog = ({ isOpen, setIsOpen }) => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate()
 
+  console.log(count)
+
   const handleClose = () => {
     setIsOpen(false)
   }
 
-  const dropdownValues = [
-    8, 16, 24, 32, 40, 48, 56, 64, 80, 104, 160, 200, 240, 280, 320, 360, 400,
-  ]
+  const dropdownValues = [8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 120, 160, 200]
 
   const handleSubmit = async () => {
     setIsSubmitted(true)
     let res
     try {
-      res = await createProject()
+      res = await createProject({ count })
 
       setTimeout(() => {
         if (res) {

@@ -19,7 +19,7 @@ import {
 import { useSession } from 'hooks/use-session'
 import logo from 'images/claimtag-logo.svg'
 
-const WebsiteNavBar = ({ left, right, position, opacity }) => {
+const NavBarAdmin = ({ left, right, position, opacity }) => {
   // const { user, logout } = useSession()
   const { logout } = useSession()
 
@@ -38,7 +38,7 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
   }
 
   return (
-    <AppBar position="absolute" top="0" color="transparent" elevation={0}>
+    <AppBar position="sticky" top="0" color="transparent" elevation={0}>
       <Toolbar>
         <Grid
           container
@@ -116,4 +116,4 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
   )
 }
 
-export default WebsiteNavBar
+export default NavBarAdmin

@@ -15,9 +15,11 @@ import useProjectStore from 'hooks/store/use-project-store'
 import ButtonDownloadClaimtags from '../../components/ButtonDownloadClaimtags'
 import { Email } from '@mui/icons-material'
 import EmailDialog from './components/EmailDialog'
+import Download from 'components/Download'
 
 const Create = () => {
-  const [isSubmitted, setIsSubmitted] = useState()
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const [project, setProject] = useState()
   const [emailDialogIsOpen, setEmailDialogIsOpen] = useState(false)
   const { createProject, createStatus } = useProjectStore()
@@ -48,6 +50,8 @@ const Create = () => {
   const qrList = ((project || {}).claimtags || []).map(claimtag => {
     return claimtag.path
   })
+
+  console.log(qrList)
 
   const handleReset = () => {
     setIsSubmitted(false)
@@ -131,7 +135,13 @@ const Create = () => {
                           </Typography>
                         </Box>
                         <Box flexGrow={1} width="100%">
-                          <ButtonDownloadClaimtags qrList={qrList} />
+                          <ButtonDownloadClaimtags
+                            disabled={qrList.length === 0}
+                            isDownloading={isDownloading}
+                            setIsDownloading={() => {
+                              setIsDownloading(true)
+                            }}
+                          />
 
                           <Box mt={2}>
                             <Button
@@ -258,6 +268,11 @@ const Create = () => {
             </Typography>
           </Grid>
         </Grid>
+        <Download
+          qrList={qrList}
+          isDownloading={isDownloading}
+          setIsDownloading={setIsDownloading}
+        />
       </Container>
     </>
   )

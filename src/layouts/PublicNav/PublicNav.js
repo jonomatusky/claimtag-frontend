@@ -28,7 +28,7 @@ const PublicNav = ({
         <footer>
           <Box height="64px" width="100%" />
 
-          <Box position="absolute" bottom={0} left={0} width="100%" pb={1}>
+          <Box position="sticky" bottom={0} left={0} width="100%" pb={1}>
             <Grid container justifyContent="center">
               <Grid item xs={12}>
                 <Typography

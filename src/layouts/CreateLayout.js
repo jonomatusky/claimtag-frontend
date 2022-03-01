@@ -5,7 +5,7 @@ import { Box, Container } from '@mui/material'
 const CreateLayout = ({ children }) => {
   return (
     <Container maxWidth="sm">
-      <Box pt={10}>
+      <Box pt={5}>
         <Outlet />
       </Box>
     </Container>

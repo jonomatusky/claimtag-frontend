@@ -18,7 +18,7 @@ export const useProjectStore = () => {
   }, [dispatchThunk])
 
   const _createProject = useCallback(
-    async count => {
+    async ({ count }) => {
       const newProject = await dispatchThunk(createProject, { count })
       return newProject
     },
@@ -32,12 +32,9 @@ export const useProjectStore = () => {
     [dispatchThunk]
   )
 
-  const _clearProjects = useCallback(
-    image => {
-      dispatch(clearProjects)
-    },
-    [dispatch]
-  )
+  const _clearProjects = useCallback(() => {
+    dispatch(clearProjects)
+  }, [dispatch])
 
   const { projects, status, error, createStatus } = useSelector(
     state => state.projects

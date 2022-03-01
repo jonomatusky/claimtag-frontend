@@ -9,10 +9,12 @@ import { Send, ArrowBack } from '@mui/icons-material'
 import useAlertStore from 'hooks/store/use-alert-store'
 import { useSession } from 'hooks/use-session'
 import { useRequest } from 'hooks/use-request'
+import Download from 'components/Download'
 
 const AdminProject = () => {
   const { pid } = useParams()
   const [status, setStatus] = useState('idle')
+  const [isDownloading, setIsDownloading] = useState(false)
   const { user } = useSession()
   const [claimtags, setClaimtags] = useState([])
   const { selectProject } = useProjectStore()
@@ -98,7 +100,11 @@ const AdminProject = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <ButtonDownloadClaimtags qrList={qrList} />
+          <ButtonDownloadClaimtags
+            disabled={qrList.length === 0}
+            isDownloading={isDownloading}
+            setIsDownloading={setIsDownloading}
+          />
         </Grid>
         <Grid item xs={12}>
           <LoadingButton
@@ -120,6 +126,11 @@ const AdminProject = () => {
           </LoadingButton>
         </Grid>
       </Grid>
+      <Download
+        qrList={qrList}
+        isDownloading={isDownloading}
+        setIsDownloading={setIsDownloading}
+      />
     </Container>
   )
 }
