@@ -10,11 +10,12 @@ import {
   List,
   ListItemIcon,
   ListItemText,
+  Link as MuiLink,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Edit, Link as LinkIcon, QrCode } from '@mui/icons-material'
 
-const Create = () => {
+const Home = () => {
   return (
     <Container maxWidth="sm">
       <Grid container spacing={3} justifyContent="center" mb={5}>
@@ -121,7 +122,7 @@ const Create = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={11}>
+        {/* <Grid item xs={11}>
           <Typography variant="h5" mb={1}>
             <b>Learn More</b>
           </Typography>
@@ -129,10 +130,16 @@ const Create = () => {
             Check out our Getting Started guide for info on how to print your
             Claimtags and make sure they're a hit at your next event.
           </Typography>
+        </Grid> */}
+        <Grid item xs={11}>
+          <Typography mb={1} textAlign="center">
+            Created by the <MuiLink href="https://plynth.com">Plynth</MuiLink>{' '}
+            team
+          </Typography>
         </Grid>
       </Grid>
     </Container>
   )
 }
 
-export default Create
+export default Home

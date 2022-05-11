@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Grid,
@@ -8,7 +8,6 @@ import {
   CardContent,
   Box,
   CircularProgress,
-  Link,
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import useProjectStore from 'hooks/store/use-project-store'
@@ -16,61 +15,74 @@ import ButtonDownloadClaimtags from '../../components/ButtonDownloadClaimtags'
 import { Email } from '@mui/icons-material'
 import EmailDialog from './components/EmailDialog'
 import Download from 'components/Download'
+import Link from 'components/Link'
 
 const Create = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [status, setStatus] = useState('ready')
   const [isDownloading, setIsDownloading] = useState(false)
-  const [project, setProject] = useState()
   const [emailDialogIsOpen, setEmailDialogIsOpen] = useState(false)
-  const { createProject, createStatus } = useProjectStore()
+  const { projects, createProject, createStatus } = useProjectStore()
+
+  const project = projects[0] || {}
 
   const handleSubmit = async () => {
-    setIsSubmitted(true)
-    let res
+    setStatus('submitted')
     try {
-      res = await createProject()
-    } catch (err) {}
-    setTimeout(() => {
-      if (res) {
-        setProject(res.project)
-      }
-    }, 5000)
+      await createProject()
+    } catch (err) {
+      console.log(err)
+      setStatus('done')
+    }
   }
+
+  useEffect(() => {
+    if (status === 'submitted') {
+      const timer = setTimeout(() => {
+        if (status === 'submitted') {
+          setStatus('done')
+        }
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [status])
+
+  useEffect(() => {
+    setStatus('ready')
+  }, [])
 
   const handleCreateAccount = async () => {
     return
   }
 
   const handleOpenEmailDialog = () => {
-    if (!!project) {
+    if (!!projects.length > 0) {
       setEmailDialogIsOpen(true)
     }
   }
 
-  const qrList = ((project || {}).claimtags || []).map(claimtag => {
+  const qrList = (project.claimtags || []).map(claimtag => {
     return claimtag.path
   })
 
-  console.log(qrList)
-
   const handleReset = () => {
-    setIsSubmitted(false)
-    setProject(null)
+    setStatus('ready')
   }
+
+  console.log(status)
 
   return (
     <>
       <EmailDialog
         isOpen={emailDialogIsOpen}
         setIsOpen={setEmailDialogIsOpen}
-        pid={(project || {}).id}
+        pid={project.id}
       />
       <Container maxWidth="xs">
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={12}>
             <Card variant="outlined">
               <CardContent>
-                {createStatus === 'failed' && isSubmitted === true ? (
+                {createStatus === 'failed' && status !== 'ready' ? (
                   <Box
                     minHeight="300px"
                     display="flex"
@@ -112,7 +124,7 @@ const Create = () => {
                   </Box>
                 ) : (
                   <>
-                    {project ? (
+                    {status === 'done' ? (
                       <Box
                         minHeight="300px"
                         display="flex"
@@ -131,7 +143,9 @@ const Create = () => {
                           </Typography>
                           <Typography mb={1}>
                             Your Claimtags are ready. Download them now or send
-                            them to your email.
+                            them to your email.{' '}
+                            <Link to="/signup">Create an account</Link> to
+                            access them any time.
                           </Typography>
                         </Box>
                         <Box flexGrow={1} width="100%">
@@ -160,7 +174,7 @@ const Create = () => {
                           </Box>
                         </Box>
                       </Box>
-                    ) : !isSubmitted ? (
+                    ) : status === 'ready' ? (
                       <Box
                         minHeight="300px"
                         display="flex"
@@ -182,7 +196,8 @@ const Create = () => {
                             immediately or send them to your email.
                           </Typography>
                           <Typography>
-                            Need more? Create a <Link>free account</Link>.
+                            Need more? Create a{' '}
+                            <Link to="/signup">free account</Link>.
                           </Typography>
                         </Box>
                         <Box flexGrow={1}>
@@ -248,8 +263,13 @@ const Create = () => {
                           <Typography mb={1} textAlign="center">
                             Your Claimtags are being generated. They will be
                             valid for <b>14 days</b>. Remove the time limit by{' '}
-                            <Link>creating an account</Link>.
+                            <Link to="/login">creating an account</Link>.
                           </Typography>
+                          <Box width="100%" textAlign="center">
+                            <Button onClick={() => setStatus('ready')}>
+                              Cancel
+                            </Button>
+                          </Box>
                         </Box>
                       </Box>
                     )}
@@ -264,7 +284,7 @@ const Create = () => {
             than 50 Claimtages at a time, and manage your project.
           </Typography> */}
             <Typography variant="body2" textAlign="center">
-              Already have an account? <Link>Sign In</Link>
+              Already have an account? <Link to="/login">Sign In</Link>
             </Typography>
           </Grid>
         </Grid>

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import axios from 'axios'
 
 import * as client from 'util/client'
-import { useSession } from './use-session'
+import useSession from './use-session'
 // import { setError } from 'redux/alertSlice'
 
 export const useRequest = () => {

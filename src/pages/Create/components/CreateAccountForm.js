@@ -6,7 +6,7 @@ import firebase from 'config/firebase'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import useAlertStore from 'hooks/store/use-alert-store'
-import { useSession } from 'hooks/use-session'
+import useSession from 'hooks/use-session'
 import { LoadingButton } from '@mui/lab'
 
 const validationSchema = yup.object({

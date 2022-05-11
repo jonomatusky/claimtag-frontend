@@ -3,9 +3,10 @@ import * as client from 'util/client'
 
 let initialState = {
   projects: [],
-  status: 'idle',
+  fetchStatus: 'idle',
   error: null,
   createStatus: 'idle',
+  updateStatus: 'idle',
 }
 
 export const fetchProjects = createAsyncThunk(
@@ -32,6 +33,19 @@ export const createProject = createAsyncThunk(
   }
 )
 
+export const updateProject = createAsyncThunk(
+  'projects/updateProject',
+  async ({ headers, id, ...inputs }) => {
+    const { project } = await client.request({
+      headers,
+      url: `/me/projects/${id}`,
+      method: 'PATCH',
+      data: inputs,
+    })
+    return { project }
+  }
+)
+
 export const deleteProject = createAsyncThunk(
   'projectss/deleteProjects',
   async ({ headers, id }) => {
@@ -54,7 +68,7 @@ const projectsSlice = createSlice({
     },
     clearProjects(state, action) {
       state.projects = []
-      state.status = 'idle'
+      state.fetchStatus = 'idle'
       state.error = null
       state.createStatus = 'idle'
     },
@@ -64,14 +78,14 @@ const projectsSlice = createSlice({
   },
   extraReducers: {
     [fetchProjects.pending]: (state, action) => {
-      state.status = 'loading'
+      state.fetchStatus = 'loading'
     },
     [fetchProjects.fulfilled]: (state, action) => {
-      state.status = 'succeeded'
+      state.fetchStatus = 'succeeded'
       state.projects = action.payload
     },
     [fetchProjects.rejected]: (state, action) => {
-      state.status = 'failed'
+      state.fetchStatus = 'failed'
       state.error = action.error.message
     },
     [createProject.pending]: (state, action) => {
@@ -83,6 +97,23 @@ const projectsSlice = createSlice({
       state.projects = [project, ...state.projects]
     },
     [createProject.rejected]: (state, action) => {
+      state.createStatus = 'failed'
+      state.error = action.error.message
+    },
+    [updateProject.pending]: (state, action) => {
+      state.updateStatus = 'loading'
+    },
+    [updateProject.fulfilled]: (state, action) => {
+      state.updateStatus = 'idle'
+      const updatedProject = action.payload
+      const matchingIndex = state.projects.findIndex(
+        project => project.id === updatedProject.id
+      )
+      const newProjects = state.projects
+      newProjects[matchingIndex] = updatedProject
+      state.projects = newProjects
+    },
+    [updateProject.rejected]: (state, action) => {
       state.createStatus = 'failed'
       state.error = action.error.message
     },
@@ -106,6 +137,8 @@ export const { setProjects, setProject, clearProjects } = projectsSlice.actions
 
 export default projectsSlice.reducer
 
-export const selectPack = (state, packId) => {
-  return (state.packs.packs || []).find(pack => pack.id === packId)
+export const selectProject = (state, projectId) => {
+  return (state.projects.projects || []).find(
+    project => project.id === projectId
+  )
 }

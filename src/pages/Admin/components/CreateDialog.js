@@ -21,8 +21,6 @@ const CreateDialog = ({ isOpen, setIsOpen }) => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate()
 
-  console.log(count)
-
   const handleClose = () => {
     setIsOpen(false)
   }
@@ -35,11 +33,12 @@ const CreateDialog = ({ isOpen, setIsOpen }) => {
     try {
       res = await createProject({ count })
 
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (res) {
           navigate(`/admin/${res.project.id}`)
         }
       }, 1000)
+      return () => clearTimeout(timer)
     } catch (err) {}
   }
 

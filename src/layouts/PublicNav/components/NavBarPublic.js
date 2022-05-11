@@ -15,7 +15,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import logo from 'images/claimtag-logo.svg'
 
-import { useSession } from 'hooks/use-session'
+import useSession from 'hooks/use-session'
 
 const WebsiteNavBar = ({ left, right, position, opacity }) => {
   const { user, initializing } = useSession()
@@ -31,7 +31,7 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
   }
 
   return (
-    <AppBar position="sticky" top="0" color="transparent" elevation={0}>
+    <AppBar position="sticky" top="0" elevation={1} color="inherit">
       <Toolbar>
         <Grid
           container

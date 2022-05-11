@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 
 // import { setError } from 'redux/alertSlice'
-import { useSession } from './use-session'
+import useSession from './use-session'
 
 export const useThunk = () => {
   const { user } = useSession()

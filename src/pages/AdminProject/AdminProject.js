@@ -7,7 +7,7 @@ import useProjectStore from 'hooks/store/use-project-store'
 import ButtonDownloadClaimtags from 'components/ButtonDownloadClaimtags'
 import { Send, ArrowBack } from '@mui/icons-material'
 import useAlertStore from 'hooks/store/use-alert-store'
-import { useSession } from 'hooks/use-session'
+import useSession from 'hooks/use-session'
 import { useRequest } from 'hooks/use-request'
 import Download from 'components/Download'
 

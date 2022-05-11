@@ -15,7 +15,7 @@ import firebase from 'config/firebase'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import useAlertStore from 'hooks/store/use-alert-store'
-// import GoogleLogo from 'images/btn_google_light_normal_ios.svg'
+import useSession from 'hooks/use-session'
 
 const validationSchema = yup.object({
   email: yup
@@ -25,49 +25,30 @@ const validationSchema = yup.object({
   password: yup.string('Enter your password').required('Password is required'),
 })
 
-const NewPortalSignUp = ({ title, text }) => {
+const SignUp = ({ title, text }) => {
   const navigate = useNavigate()
+  const { logout } = useSession()
 
   const { setError, clearError } = useAlertStore()
 
   const handleSubmit = async ({ email, password }) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
+      logout()
+      await firebase.auth().createUserWithEmailAndPassword(email, password)
+      clearError()
       navigate(`/admin`)
     } catch (err) {
-      if (err.code === 'auth/wrong-password') {
-        try {
-          let signInMethods = await firebase
-            .auth()
-            .fetchSignInMethodsForEmail(email)
-
-          if (
-            signInMethods.length !== 0 &&
-            !signInMethods.includes('password')
-          ) {
-            setError({
-              message:
-                'No password found for this account. Try a different login method.',
-            })
-          } else {
-            setError({
-              message: `Incorrect email or password. Please try again.`,
-            })
-          }
-        } catch (err) {
-          setError({
-            message: `Incorrect email or password. Please try again.`,
-          })
-        }
-      } else if (err.code === 'auth/invalid-email') {
+      if (err.code === 'auth/invalid-email') {
         setError({ message: 'Please enter a valid email address' })
-      } else if (err.code === 'auth/user-not-found') {
+      } else if (err.code === 'auth/email-already-in-use') {
         setError({
-          message: `Incorrect email or password. Please try again.`,
+          message: `Another account is using ${email}. Please sign in instead.`,
         })
       } else {
+        console.log(err)
         setError({
-          message: `Incorrect email or password. Please try again.`,
+          message:
+            'There was an error creating your account. Please try again.',
         })
       }
     }
@@ -103,7 +84,7 @@ const NewPortalSignUp = ({ title, text }) => {
           <Grid container justifyContent="flex-start" spacing={3}>
             <Grid item xs={12} mb={2}>
               <Typography variant="h4">
-                <b>{title || 'Sign In'}</b>
+                <b>{title || 'Sign Up'}</b>
               </Typography>
             </Grid>
             {text && (
@@ -139,16 +120,6 @@ const NewPortalSignUp = ({ title, text }) => {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <Typography mt={1}>
-                <Link
-                  component={RouterLink}
-                  to="/recover"
-                  color="secondary"
-                  underline="hover"
-                >
-                  Forgot password?
-                </Link>
-              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Button
@@ -208,11 +179,8 @@ const NewPortalSignUp = ({ title, text }) => {
             <Grid item container justifyContent="center">
               <Typography variant="body2">
                 Don't have an account?{' '}
-                <Link
-                  href="https://airtable.com/shrW23ippm05xPTYg"
-                  size="small"
-                >
-                  <b>Sign Up</b>
+                <Link component={RouterLink} to="/login" size="small">
+                  <b>Sign In</b>
                 </Link>
               </Typography>
             </Grid>
@@ -223,4 +191,4 @@ const NewPortalSignUp = ({ title, text }) => {
   )
 }
 
-export default NewPortalSignUp
+export default SignUp

@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 // import { Menu as MenuIcon } from '@mui/icons-material'
 
-import { useSession } from 'hooks/use-session'
+import useSession from 'hooks/use-session'
 import logo from 'images/claimtag-logo.svg'
 
 const NavBarAdmin = ({ left, right, position, opacity }) => {

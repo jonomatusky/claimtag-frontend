@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { useUserStore } from './store/use-user-store'
 import { useProjectStore } from './store/use-project-store'
-import { useSession } from './use-session'
+import useSession from './use-session'
 import useAlertStore from './store/use-alert-store'
 
 export const useFetch = () => {
@@ -17,7 +17,7 @@ export const useFetch = () => {
     createMe,
     subscribe,
   } = useUserStore()
-  const { fetchProjects, status: fetchProjectsStatus } = useProjectStore()
+  const { fetchProjects, fetchStatus: fetchProjectsStatus } = useProjectStore()
 
   useEffect(() => {
     const fetch = async () => {

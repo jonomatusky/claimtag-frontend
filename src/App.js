@@ -21,6 +21,7 @@ import RestrictedPublicRoute from 'routes/RestrictedPublicRoute'
 import AdminNav from 'layouts/AdminNav/AdminNav'
 import NotFound from 'components/NotFound'
 import AdminProject from 'pages/AdminProject/AdminProject'
+import QRTest from 'pages/QRTest/QRTest'
 
 // const { REACT_APP_POSTHOG_KEY } = process.env
 
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/" element={<PublicNav right={<></>} hideFooter />}>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/qrtest" element={<QRTest />} />
           </Route>
           <Route path="/admin" element={<PrivateRoute component={AdminNav} />}>
             <Route path="/admin" element={<Admin />} />

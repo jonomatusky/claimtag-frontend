@@ -63,6 +63,8 @@ const userSlice = createSlice({
   reducers: {
     clearUser(state, action) {
       state.status = 'idle'
+      state.createStatus = 'idle'
+      state.updateStatus = 'idle'
       state.user = {}
       state.error = null
     },

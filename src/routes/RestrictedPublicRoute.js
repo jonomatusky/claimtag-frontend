@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { useSession } from 'hooks/use-session'
+import useSession from 'hooks/use-session'
 import { useFetch } from 'hooks/use-fetch'
 
 const RestrictedPublicRoute = ({ component: ReactComponent, redirectPath }) => {

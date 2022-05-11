@@ -5,6 +5,7 @@ import { useThunk } from 'hooks/use-thunk'
 import {
   fetchProjects,
   createProject,
+  updateProject,
   deleteProject,
   clearProjects,
 } from 'redux/projectSlice'
@@ -18,9 +19,18 @@ export const useProjectStore = () => {
   }, [dispatchThunk])
 
   const _createProject = useCallback(
-    async ({ count }) => {
+    async inputs => {
+      const { count } = inputs || {}
       const newProject = await dispatchThunk(createProject, { count })
       return newProject
+    },
+    [dispatchThunk]
+  )
+
+  const _updateProject = useCallback(
+    async (id, inputs) => {
+      const project = await dispatchThunk(updateProject, { id, ...inputs })
+      return project
     },
     [dispatchThunk]
   )
@@ -47,6 +57,7 @@ export const useProjectStore = () => {
   return {
     fetchProjects: _fetchProjects,
     createProject: _createProject,
+    updateProject: _updateProject,
     deleteProject: _deleteProject,
     clearProjects: _clearProjects,
     selectProject,
