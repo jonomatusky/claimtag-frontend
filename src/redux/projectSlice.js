@@ -106,6 +106,7 @@ const projectsSlice = createSlice({
     [updateProject.fulfilled]: (state, action) => {
       state.updateStatus = 'idle'
       const updatedProject = action.payload
+      console.log(updatedProject)
       const matchingIndex = state.projects.findIndex(
         project => project.id === updatedProject.id
       )

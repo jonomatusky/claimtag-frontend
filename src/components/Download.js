@@ -84,19 +84,29 @@ const Download = ({ filename, qrList, isDownloading, setIsDownloading }) => {
         }
       }
 
+      console.log('generated images')
+
       const pdf = new jsPDF({ unit: 'in', format: 'letter' })
+
+      console.log('generated pdf')
 
       let timer = setTimeout(async () => {
         let imgData = refs.current[0].toDataURL('image/jpeg', 1.0)
-        pdf.addImage(imgData, 'JPEG', 0, 0, 8.5, 11)
+        pdf.addImage(imgData, 'JPEG', 0, 0, 8.5, 11, '', 'NONE')
 
         for (let i = 1; i < pageNumber; i++) {
           pdf.addPage('letter')
           imgData = refs.current[i].toDataURL('image/jpeg', 1.0)
-          pdf.addImage(imgData, 'JPEG', 0, 0, 8.5, 11)
+          console.log('adding page ' + i)
+          pdf.addImage(imgData, 'JPEG', 0, 0, 8.5, 11, '', 'NONE')
+          console.log('added page ' + i)
         }
 
+        console.log('saving pdf')
+
         pdf.save(`${filename || 'claimtags'}.pdf`)
+
+        console.log('saved pdf')
 
         setIsDownloading(false)
       }, 1000)
@@ -115,18 +125,19 @@ const Download = ({ filename, qrList, isDownloading, setIsDownloading }) => {
 
   return (
     <>
-      {qrList.map((qr, i) => {
-        return (
-          <QRCode
-            size={qrWidth}
-            id={`qr${i}`}
-            key={qr}
-            value={REACT_APP_SCAN_URL + '/' + qr}
-            hidden
-          />
-        )
-      })}
-      {pages}
+      {isDownloading &&
+        qrList.map((qr, i) => {
+          return (
+            <QRCode
+              size={qrWidth}
+              id={`qr${i}`}
+              key={qr}
+              value={REACT_APP_SCAN_URL + '/' + qr}
+              hidden
+            />
+          )
+        })}
+      {isDownloading && pages}
     </>
   )
 }

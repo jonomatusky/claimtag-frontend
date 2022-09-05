@@ -10,12 +10,14 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
+import { Download } from '@mui/icons-material'
 import useProjectStore from 'hooks/store/use-project-store'
-import ButtonDownloadClaimtags from '../../components/ButtonDownloadClaimtags'
+// import ButtonDownloadClaimtags from '../../components/ButtonDownloadClaimtags'
 import { Email } from '@mui/icons-material'
 import EmailDialog from './components/EmailDialog'
-import Download from 'components/Download'
+// import Download from 'components/Download'
 import Link from 'components/Link'
+import DialogDownload from 'components/DialogDownload'
 
 const Create = () => {
   const [status, setStatus] = useState('ready')
@@ -68,7 +70,10 @@ const Create = () => {
     setStatus('ready')
   }
 
-  console.log(status)
+  const handleClose = () => {
+    console.log('closing')
+    setIsDownloading(false)
+  }
 
   return (
     <>
@@ -77,8 +82,14 @@ const Create = () => {
         setIsOpen={setEmailDialogIsOpen}
         pid={project.id}
       />
+      <DialogDownload
+        filename={'Claimtags'}
+        qrList={qrList}
+        isOpen={isDownloading}
+        onClose={handleClose}
+      />
       <Container maxWidth="xs">
-        <Grid container justifyContent="center" spacing={1}>
+        <Grid container justifyContent="center" spacing={1} mt={3}>
           <Grid item xs={12}>
             <Card variant="outlined">
               <CardContent>
@@ -149,13 +160,28 @@ const Create = () => {
                           </Typography>
                         </Box>
                         <Box flexGrow={1} width="100%">
-                          <ButtonDownloadClaimtags
+                          {/* <ButtonDownloadClaimtags
                             disabled={qrList.length === 0}
                             isDownloading={isDownloading}
                             setIsDownloading={() => {
                               setIsDownloading(true)
                             }}
-                          />
+                          /> */}
+                          <LoadingButton
+                            onClick={() => setIsDownloading(true)}
+                            variant="contained"
+                            size="large"
+                            disableElevation
+                            color="secondary"
+                            fullWidth
+                            endIcon={<Download />}
+                            loading={isDownloading}
+                            disabled={isDownloading}
+                          >
+                            <Typography textTransform={'none'}>
+                              <b>Download</b>
+                            </Typography>
+                          </LoadingButton>
 
                           <Box mt={2}>
                             <Button
@@ -263,7 +289,7 @@ const Create = () => {
                           <Typography mb={1} textAlign="center">
                             Your Claimtags are being generated. They will be
                             valid for <b>14 days</b>. Remove the time limit by{' '}
-                            <Link to="/login">creating an account</Link>.
+                            <Link to="/signup">creating an account</Link>.
                           </Typography>
                           <Box width="100%" textAlign="center">
                             <Button onClick={() => setStatus('ready')}>
@@ -288,11 +314,11 @@ const Create = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Download
+        {/* <Download
           qrList={qrList}
           isDownloading={isDownloading}
           setIsDownloading={setIsDownloading}
-        />
+        /> */}
       </Container>
     </>
   )

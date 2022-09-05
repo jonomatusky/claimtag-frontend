@@ -43,12 +43,11 @@ export const useProjectStore = () => {
   )
 
   const _clearProjects = useCallback(() => {
-    dispatch(clearProjects)
+    dispatch(clearProjects())
   }, [dispatch])
 
-  const { projects, status, error, createStatus } = useSelector(
-    state => state.projects
-  )
+  const { projects, fetchStatus, error, createStatus, updateStatus } =
+    useSelector(state => state.projects)
 
   const selectProject = projectId => {
     return (projects || []).find(project => project.id === projectId)
@@ -62,9 +61,10 @@ export const useProjectStore = () => {
     clearProjects: _clearProjects,
     selectProject,
     projects,
-    status,
+    fetchStatus,
     error,
     createStatus,
+    updateStatus,
   }
 }
 

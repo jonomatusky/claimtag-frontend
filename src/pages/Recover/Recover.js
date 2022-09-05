@@ -14,6 +14,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useFormik } from 'formik'
 import useAlertStore from 'hooks/store/use-alert-store'
 import { Close } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 
 const validationSchema = yup.object({
   email: yup
@@ -23,11 +24,13 @@ const validationSchema = yup.object({
 })
 
 const Recover = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSent, setIsSent] = useState(false)
 
   const { setError } = useAlertStore()
 
   const handleSubmit = async ({ email }) => {
+    setIsSubmitted(true)
     try {
       await firebase.auth().sendPasswordResetEmail(email)
       setIsSent(true)
@@ -41,6 +44,7 @@ const Recover = () => {
         })
       }
     }
+    setIsSubmitted(false)
   }
 
   const formik = useFormik({
@@ -108,11 +112,12 @@ const Recover = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button
+                <LoadingButton
                   type="submit"
                   variant="contained"
                   size="large"
                   fullWidth
+                  loading={isSubmitted}
                 >
                   <Typography
                     letterSpacing={1}
@@ -120,7 +125,7 @@ const Recover = () => {
                   >
                     Continue
                   </Typography>
-                </Button>
+                </LoadingButton>
               </Grid>
               <Grid item xs={12}>
                 <Button

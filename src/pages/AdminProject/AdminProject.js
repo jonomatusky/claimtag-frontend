@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button, Grid, Typography, Container } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
+import { Download } from '@mui/icons-material'
 // import { request } from 'util/client'
 import useProjectStore from 'hooks/store/use-project-store'
-import ButtonDownloadClaimtags from 'components/ButtonDownloadClaimtags'
+// import ButtonDownloadClaimtags from 'components/ButtonDownloadClaimtags'
 import { Send, ArrowBack } from '@mui/icons-material'
 import useAlertStore from 'hooks/store/use-alert-store'
 import useSession from 'hooks/use-session'
 import { useRequest } from 'hooks/use-request'
-import Download from 'components/Download'
+import DialogDownload from 'components/DialogDownload'
 
 const AdminProject = () => {
   const { pid } = useParams()
@@ -77,6 +78,18 @@ const AdminProject = () => {
     return () => clearTimeout(timer)
   }
 
+  const name =
+    claimtags.length && project.createdAt
+      ? 'Claimtags ' +
+        claimtags.length +
+        'x - ' +
+        (project.createdAt
+          ? new Date(project.createdAt).toLocaleDateString() +
+            ' ' +
+            new Date(project.createdAt).toLocaleTimeString()
+          : '')
+      : 'Claimtags'
+
   return (
     <Container maxWidth="xs">
       <Grid container justifyContent="center" spacing={2}>
@@ -91,20 +104,24 @@ const AdminProject = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">
-            {project.createdAt
-              ? new Date(project.createdAt).toDateString() +
-                ' ' +
-                new Date(project.createdAt).toLocaleTimeString()
-              : 'Date'}
-          </Typography>
+          <Typography variant="h6">{name}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <ButtonDownloadClaimtags
-            disabled={qrList.length === 0}
-            isDownloading={isDownloading}
-            setIsDownloading={setIsDownloading}
-          />
+          <LoadingButton
+            onClick={() => setIsDownloading(true)}
+            variant="contained"
+            size="large"
+            disableElevation
+            color="secondary"
+            fullWidth
+            endIcon={<Download />}
+            loading={isDownloading}
+            disabled={isDownloading}
+          >
+            <Typography textTransform={'none'}>
+              <b>Download</b>
+            </Typography>
+          </LoadingButton>
         </Grid>
         <Grid item xs={12}>
           <LoadingButton
@@ -126,10 +143,16 @@ const AdminProject = () => {
           </LoadingButton>
         </Grid>
       </Grid>
-      <Download
+      {/* <Download
         qrList={qrList}
         isDownloading={isDownloading}
         setIsDownloading={setIsDownloading}
+      /> */}
+      <DialogDownload
+        filename={'Claimtags ' + name}
+        qrList={qrList}
+        isOpen={isDownloading}
+        onClose={() => setIsDownloading(false)}
       />
     </Container>
   )

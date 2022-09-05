@@ -1,37 +1,20 @@
-// import React, { useState } from 'react'
 import React from 'react'
-// import { Link as RouterLink } from 'react-router-dom'
 import {
   Grid,
   Box,
   AppBar,
   Toolbar,
   Typography,
-  // Menu,
-  // MenuItem,
-  // IconButton,
-  // Divider,
-  // Link,
+  Link,
   Button,
 } from '@mui/material'
-// import { Menu as MenuIcon } from '@mui/icons-material'
 
 import useSession from 'hooks/use-session'
 import logo from 'images/claimtag-logo.svg'
+import { NavLink } from 'react-router-dom'
 
 const NavBarAdmin = ({ left, right, position, opacity }) => {
-  // const { user, logout } = useSession()
   const { logout } = useSession()
-
-  // const [anchorEl, setAnchorEl] = useState(null)
-
-  // const handleOpen = event => {
-  //   setAnchorEl(event.currentTarget)
-  // }
-
-  // const handleClose = () => {
-  //   setAnchorEl(null)
-  // }
 
   const handleLogout = async () => {
     logout()
@@ -72,43 +55,23 @@ const NavBarAdmin = ({ left, right, position, opacity }) => {
           {right ? (
             right
           ) : (
-            // <>
-            //   <IconButton onClick={handleOpen}>
-            //     <MenuIcon color="secondary" />
-            //   </IconButton>
-            //   <Menu
-            //     id="simple-menu"
-            //     anchorEl={anchorEl}
-            //     open={Boolean(anchorEl)}
-            //     transitionDuration={0}
-            //     anchorOrigin={{
-            //       horizontal: 'left',
-            //       vertical: 'bottom',
-            //     }}
-            //     anchorPosition={{ left: 0, top: -20 }}
-            //     onClose={handleClose}
-            //     MenuListProps={{ onMouseLeave: handleClose }}
-            //   >
-            //     <MenuItem component={RouterLink} to="/admin/account">
-            //       Change Email
-            //     </MenuItem>
-            //     <MenuItem component={RouterLink} to="/admin/account">
-            //       Change Password
-            //     </MenuItem>
-            //     <MenuItem
-            //       component={Link}
-            //       href="https://help.plynth.com"
-            //       target="_blank"
-            //     >
-            //       Get Help
-            //     </MenuItem>
-            //     <Divider />
-            //     <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            //   </Menu>
-            // </>
-            <Button onClick={handleLogout} color="secondary">
-              <Typography textTransform="none">Logout</Typography>
-            </Button>
+            <Box display="flex" alignItems="center">
+              <Box pr={2} sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Link
+                  component={NavLink}
+                  to="/contact"
+                  color="inherit"
+                  underline="none"
+                >
+                  Contact
+                </Link>
+              </Box>
+              <Box>
+                <Button onClick={handleLogout} color="secondary">
+                  <Typography textTransform="none">Logout</Typography>
+                </Button>
+              </Box>
+            </Box>
           )}
         </Grid>
       </Toolbar>

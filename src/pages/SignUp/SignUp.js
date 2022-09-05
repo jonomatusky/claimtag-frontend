@@ -1,12 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Link,
   Container,
   Box,
   Grid,
   Typography,
-  Button,
-  // Divider,
   TextField,
 } from '@mui/material'
 import * as yup from 'yup'
@@ -16,6 +14,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import useAlertStore from 'hooks/store/use-alert-store'
 import useSession from 'hooks/use-session'
+import { LoadingButton } from '@mui/lab'
 
 const validationSchema = yup.object({
   email: yup
@@ -26,12 +25,14 @@ const validationSchema = yup.object({
 })
 
 const SignUp = ({ title, text }) => {
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate()
   const { logout } = useSession()
 
   const { setError, clearError } = useAlertStore()
 
   const handleSubmit = async ({ email, password }) => {
+    setIsSubmitted(true)
     try {
       logout()
       await firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -51,6 +52,7 @@ const SignUp = ({ title, text }) => {
             'There was an error creating your account. Please try again.',
         })
       }
+      setIsSubmitted(false)
     }
   }
 
@@ -96,9 +98,10 @@ const SignUp = ({ title, text }) => {
             )}
             <Grid item xs={12}>
               <TextField
+                type="email"
                 variant="outlined"
                 fullWidth
-                size="small"
+                size="large"
                 placeholder="email"
                 {...formik.getFieldProps('email')}
                 FormHelperTextProps={{ sx: { fontSize: '16px' } }}
@@ -111,7 +114,7 @@ const SignUp = ({ title, text }) => {
                 type="password"
                 variant="outlined"
                 fullWidth
-                size="small"
+                size="large"
                 placeholder="password"
                 {...formik.getFieldProps('password')}
                 FormHelperTextProps={{ sx: { fontSize: '16px' } }}
@@ -122,20 +125,21 @@ const SignUp = ({ title, text }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="contained"
                 size="large"
                 fullWidth
                 sx={{ height: '51.5px' }}
+                loading={isSubmitted}
               >
                 <Typography
                   letterSpacing={1}
                   style={{ fontWeight: 900, fontSize: '18px' }}
                 >
-                  Sign In
+                  Sign Up
                 </Typography>
-              </Button>
+              </LoadingButton>
             </Grid>
             {/* <Grid item xs={12} container alignItems="center" spacing={1}>
                 <Grid item xs>

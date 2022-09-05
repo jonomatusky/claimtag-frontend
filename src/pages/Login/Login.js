@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Link,
   Container,
   Box,
   Grid,
   Typography,
-  Button,
   TextField,
 } from '@mui/material'
 import * as yup from 'yup'
@@ -14,6 +13,8 @@ import firebase from 'config/firebase'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import useAlertStore from 'hooks/store/use-alert-store'
+import { LoadingButton } from '@mui/lab'
+import useSession from 'hooks/use-session'
 
 const validationSchema = yup.object({
   email: yup
@@ -24,12 +25,16 @@ const validationSchema = yup.object({
 })
 
 const NewPortalSignUp = ({ title, text }) => {
+  const { logout } = useSession()
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate()
 
   const { setError } = useAlertStore()
 
   const handleSubmit = async ({ email, password }) => {
+    setIsSubmitted(true)
     try {
+      logout()
       await firebase.auth().signInWithEmailAndPassword(email, password)
       navigate(`/admin`)
     } catch (err) {
@@ -68,6 +73,7 @@ const NewPortalSignUp = ({ title, text }) => {
           message: `Incorrect email or password. Please try again.`,
         })
       }
+      setIsSubmitted(false)
     }
   }
 
@@ -137,12 +143,13 @@ const NewPortalSignUp = ({ title, text }) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="contained"
                 size="large"
                 fullWidth
                 sx={{ height: '51.5px' }}
+                loading={isSubmitted}
               >
                 <Typography
                   letterSpacing={1}
@@ -150,7 +157,7 @@ const NewPortalSignUp = ({ title, text }) => {
                 >
                   Sign In
                 </Typography>
-              </Button>
+              </LoadingButton>
             </Grid>
             <Grid item container justifyContent="center">
               <Typography variant="body2">

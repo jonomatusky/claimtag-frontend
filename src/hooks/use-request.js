@@ -75,3 +75,5 @@ export const useRequest = () => {
 
   return { status, request }
 }
+
+export default useRequest

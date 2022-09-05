@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useUserStore } from './store/use-user-store'
 import { useProjectStore } from './store/use-project-store'
@@ -9,12 +9,12 @@ export const useFetch = () => {
   const { user } = useSession()
   const { setError } = useAlertStore()
 
+  const [status, setStatus] = useState('idle')
+
   const {
     fetchUser,
     status: fetchUserStatus,
     user: storeUser,
-    createMeStatus,
-    createMe,
     subscribe,
   } = useUserStore()
   const { fetchProjects, fetchStatus: fetchProjectsStatus } = useProjectStore()
@@ -22,8 +22,11 @@ export const useFetch = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
+        setStatus('loading')
         await fetchUser()
+        setStatus('succeeded')
       } catch (err) {
+        setStatus('failed')
         setError({ message: err.message })
       }
     }
@@ -34,31 +37,23 @@ export const useFetch = () => {
   }, [user, fetchUser, fetchUserStatus, setError, subscribe])
 
   useEffect(() => {
-    if (
-      fetchUserStatus === 'succeeded' &&
-      !storeUser._id &&
-      createMeStatus === 'idle'
-    ) {
-      try {
-        createMe({})
-      } catch (err) {}
-    }
-  }, [createMe, fetchUserStatus, storeUser, createMeStatus])
-
-  useEffect(() => {
     const fetch = async () => {
       try {
         await fetchProjects()
-      } catch (err) {}
+        setStatus('succeeded')
+      } catch (err) {
+        setStatus('failed')
+      }
     }
     if (
       fetchUserStatus === 'succeeded' &&
       fetchProjectsStatus === 'idle' &&
+      !!user &&
       !!storeUser._id
     ) {
       fetch()
     }
   }, [fetchUserStatus, fetchProjectsStatus, fetchProjects, user, storeUser])
 
-  return
+  return { status }
 }

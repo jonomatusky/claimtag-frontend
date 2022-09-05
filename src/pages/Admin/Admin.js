@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Grid, Button, Typography, Divider } from '@mui/material'
+import {
+  Container,
+  Grid,
+  Button,
+  Typography,
+  Divider,
+  CircularProgress,
+} from '@mui/material'
 
 import { useProjectStore } from 'hooks/store/use-project-store'
 import ProjectItem from './components/ProjectItem'
@@ -10,26 +17,27 @@ import useUserStore from 'hooks/store/use-user-store'
 
 const Admin = () => {
   const { user } = useUserStore()
-  const { projects, updateProject } = useProjectStore()
+  const { projects, updateProject, fetchStatus, updateStatus } =
+    useProjectStore()
   const [createDialogIsOpen, setCreateDialogIsOpen] = useState(false)
 
-  console.log(projects)
-  console.log(user)
-
   useEffect(() => {
-    const claimProjects = async id => {
-      updateProject(id)
+    const claimProject = async id => {
+      try {
+        await updateProject(id)
+      } catch (err) {}
     }
 
-    if (user) {
+    if (user && updateStatus === 'idle') {
       for (let i = 0; i < projects.length; i++) {
         if (!projects[i].owner) {
-          console.log('claiming project')
-          claimProjects(projects[i].id)
+          console.log('claiming ' + projects[i].id)
+          claimProject(projects[i].id)
         }
       }
     }
-  }, [projects, updateProject, user])
+  }, [projects, updateProject, user, updateStatus])
+
   return (
     <>
       <CreateDialog
@@ -73,8 +81,27 @@ const Admin = () => {
         <Divider />
       </Box>
       <Container maxWidth="xs">
-        <Grid container spacing={3} mt={13}>
-          {/* <Box> */}
+        <Grid container spacing={3} mt={13} mb={2}>
+          {fetchStatus !== 'succeeded' && fetchStatus !== 'failed' && (
+            <Grid item xs={12}>
+              <Box
+                width="100%"
+                height="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <CircularProgress color="secondary" />
+              </Box>
+            </Grid>
+          )}
+          {fetchStatus === 'succeeded' && projects.length > 0 && (
+            <Grid item xs={12}>
+              <Typography variant="h6" textAlign="center">
+                Previous Claimtags
+              </Typography>
+            </Grid>
+          )}
           {[...projects].map(project => {
             return (
               <Grid item xs={12} key={project.id}>
@@ -82,7 +109,6 @@ const Admin = () => {
               </Grid>
             )
           })}
-          {/* </Box> */}
         </Grid>
       </Container>
     </>

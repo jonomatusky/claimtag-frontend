@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, NavLink } from 'react-router-dom'
 import {
   Grid,
   Box,
@@ -31,7 +31,7 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
   }
 
   return (
-    <AppBar position="sticky" top="0" elevation={1} color="inherit">
+    <AppBar position="fixed" top="0" elevation={1} color="inherit">
       <Toolbar>
         <Grid
           container
@@ -42,31 +42,57 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
           {!!left ? (
             left
           ) : (
-            <Box flexGrow={1}>
-              <Grid container>
-                <Grid item>
-                  <Grid container direction="column" alignItems="center">
-                    <Link
-                      component={RouterLink}
-                      to="/"
-                      underline="none"
-                      color="secondary"
-                    >
-                      <Box display="flex" alignItems="center">
-                        <img
-                          src={logo}
-                          alt="Claimtag Logo"
-                          style={{ width: '20px', marginRight: '7px' }}
-                        />
-                        <Typography variant="h6">
-                          <b>Claimtags</b>
-                        </Typography>
-                      </Box>
-                    </Link>
+            <>
+              <Box>
+                <Grid container>
+                  <Grid item>
+                    <Grid container direction="column" alignItems="center">
+                      <Link
+                        component={RouterLink}
+                        to="/"
+                        underline="none"
+                        color="secondary"
+                      >
+                        <Box display="flex" alignItems="center">
+                          <img
+                            src={logo}
+                            alt="Claimtag Logo"
+                            style={{ width: '20px', marginRight: '4px' }}
+                          />
+                          <Typography variant="h6">
+                            <b>Claimtags</b>
+                          </Typography>
+                        </Box>
+                      </Link>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Box>
+              </Box>
+              <Box pl={3} sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Link
+                  component={NavLink}
+                  to="/how-it-works"
+                  color="inherit"
+                  underline="none"
+                >
+                  How It Works
+                </Link>
+              </Box>
+              <Box
+                flexGrow={1}
+                pl={2}
+                sx={{ display: { xs: 'none', md: 'flex' } }}
+              >
+                <Link
+                  component={NavLink}
+                  to="/contact"
+                  color="inherit"
+                  underline="none"
+                >
+                  Contact
+                </Link>
+              </Box>
+            </>
           )}
 
           {right ? (
@@ -105,6 +131,12 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
                       open={Boolean(anchorEl)}
                       onClose={handleClose}
                     >
+                      <MenuItem component={RouterLink} to="/how-it-works">
+                        How It Works
+                      </MenuItem>
+                      <MenuItem component={RouterLink} to="/contact">
+                        Contact
+                      </MenuItem>
                       <MenuItem component={RouterLink} to="/signup">
                         Sign Up
                       </MenuItem>
@@ -140,7 +172,7 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
                       disableElevation
                     >
                       <Typography>
-                        <b>Sign Up</b>
+                        <b>Get Started</b>
                       </Typography>
                     </MuiButton>
                   </Box>

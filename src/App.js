@@ -12,7 +12,6 @@ import SignUp from 'pages/SignUp/SignUp'
 import Recover from 'pages/Recover/Recover'
 import Home from 'pages/Home/Home'
 import Admin from 'pages/Admin/Admin'
-import Account from 'pages/Account/Account'
 
 import AlertBar from 'components/AlertBar'
 import Create from 'pages/Create/Create'
@@ -21,6 +20,8 @@ import RestrictedPublicRoute from 'routes/RestrictedPublicRoute'
 import AdminNav from 'layouts/AdminNav/AdminNav'
 import NotFound from 'components/NotFound'
 import AdminProject from 'pages/AdminProject/AdminProject'
+import HowItWorks from 'pages/HowItWorks/HowItWorks'
+import Contact from 'pages/Contact/Contact'
 import QRTest from 'pages/QRTest/QRTest'
 
 // const { REACT_APP_POSTHOG_KEY } = process.env
@@ -46,6 +47,8 @@ const App = () => {
           <Route path="/" element={<PublicNav />}>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
+            <Route path="how-it-works" element={<HowItWorks />} />
+            <Route path="contact" element={<Contact />} />
             <Route
               path="/create"
               element={
@@ -66,9 +69,9 @@ const App = () => {
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/:pid" element={<AdminProject />} />
           </Route>
-          <Route path="/account" element={<PrivateRoute />}>
+          {/* <Route path="/account" element={<PrivateRoute />}>
             <Route path="/account" element={<Account />} />
-          </Route>
+          </Route> */}
         </Routes>
       </Router>
     </UserContext.Provider>
